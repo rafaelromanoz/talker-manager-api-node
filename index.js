@@ -20,8 +20,16 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-// req1
+// req 7
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const data = await fs.readFile(TALKERJSON, 'utf8');
+  const toJS = JSON.parse(data);
+  const filterSearch = toJS.filter((talker) => talker.name.includes(q));
+  return res.status(200).send(filterSearch);
+});
 
+// req1
 app.get('/talker', rescue(async (_req, res) => {
   const data = await fs.readFile(TALKERJSON, 'utf-8');
   const toJson = JSON.parse(data);
