@@ -50,12 +50,14 @@ app.post('/login', validateEmail, validatePass, (req, res) => {
 
 // req4
 
-app.post('/talker', validateToken, validateEmai, validateTalk, validateTalkKeys, validateAge,
+app.post('/talker', validateToken, validateEmai, validateTalkKeys, validateTalk, validateAge,
  async (req, res) => {
-  const { id, name, age } = req.body;
+  const { name, age } = req.body;
   const { watchedAt, rate } = req.body.talk; 
+  const data = await fs.readFile('./talker.json', 'utf8');
+  const toJS = JSON.parse(data);
   const obj = {
-    id,
+    id: toJS.length + 1,
     name,
     age,
     talk: {
@@ -63,12 +65,36 @@ app.post('/talker', validateToken, validateEmai, validateTalk, validateTalkKeys,
       rate,
     },
   };
-  const data = await fs.readFile('./talker.json', 'utf8');
-  const toJS = JSON.parse(data);
   toJS.push(obj);
   const toJSON = JSON.stringify(toJS);
   await fs.writeFile('./talker.json', toJSON);
   return res.status(201).json(obj);
+});
+
+// req 5
+
+app.put('/talker/:id', validateToken, validateEmai, validateTalkKeys, 
+validateTalk, validateAge, async (req, res) => {
+  const { name, age } = req.body;
+  const { id } = req.params; 
+  const { watchedAt, rate } = req.body.talk;
+  const data = await fs.readFile('./talker.json', 'utf8');
+  const toJS = JSON.parse(data);
+  const indexOfEdit = toJS.findIndex((talker) => talker.id === parseInt(id, 10));
+  const idOfTalker = toJS.find((talker) => talker.id === parseInt(id, 10));
+  const obj = {
+    id: idOfTalker.id,
+    name,
+    age,
+    talk: {
+      watchedAt,
+      rate,
+    },
+  };
+  toJS[indexOfEdit] = { ...obj };
+  const toJSON = JSON.stringify(toJS);
+  await fs.writeFile('./talker.json', toJSON);
+  return res.status(200).json(obj);
 });
 
 app.listen(PORT, () => {
