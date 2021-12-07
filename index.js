@@ -67,7 +67,7 @@ app.post('/talker', validateToken, validateEmai, validateTalk, validateTalkKeys,
   const toJS = JSON.parse(data);
   toJS.push(obj);
   const toJSON = JSON.stringify(toJS);
-  fs.writeFile('./talker.json', toJSON);
+  await fs.writeFile('./talker.json', toJSON);
   return res.status(201).json(obj);
 });
 
