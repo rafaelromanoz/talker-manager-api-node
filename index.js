@@ -99,8 +99,14 @@ validateTalk, validateAge, async (req, res) => {
 
 // req 6
 
-app.delete('/talker/:id', (req, next) => {
-  
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params; 
+  const data = await fs.readFile(TALKERJSON, 'utf8');
+  const toJS = JSON.parse(data);
+  const deleteTalker = toJS.filter((talker) => talker.id !== parseInt(id, 10));
+  const toJSON = JSON.stringify(deleteTalker);
+  await fs.writeFile(TALKERJSON, toJSON);
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 app.listen(PORT, () => {
