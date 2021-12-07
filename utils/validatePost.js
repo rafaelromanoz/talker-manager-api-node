@@ -35,7 +35,8 @@ const validateAge = (req, res, next) => {
 const validateTalk = (req, res, next) => {
   const regexWatch = /\d{2}\/\d{2}\/\d{4}/g;
   const { talk } = req.body;
-  if (!regexWatch.test(talk.watchedAt)) {
+  console.log(talk);
+  if (!regexWatch.test(talk.watchedAt) || !talk.watchedAt) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
   if (talk.rate < 1 || talk.rate > 5) {
@@ -46,7 +47,7 @@ const validateTalk = (req, res, next) => {
 
 const validateTalkKeys = (req, res, next) => {
   const { talk } = req.body;
-  if (talk.watchedAt === '' || talk.rate === '' || !talk) {
+  if (talk.watchedAt === '' || talk.rate === '' || talk === {}) {
     return res.status(400).json({ message: 
       'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
