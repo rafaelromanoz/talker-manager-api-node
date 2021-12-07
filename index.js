@@ -3,10 +3,10 @@ const bodyParser = require('body-parser');
 const fs = require('fs/promises');
 const rescue = require('express-rescue');
 const crypto = require('crypto');
-const { validateEmail, validatePass } = require('./utils/validateEmailPassword');
+const { validateEmail, validatePass } = require('./middlewares/validateEmailPassword');
 const { validateAge, validateTalk, validateEmai, 
-  validateTalkKeys, validateToken } = require('./utils/validatePost');
-const { searchId, searchIndex } = require('./utils/auxiliares');
+  validateTalkKeys, validateToken } = require('./middlewares/validatePost');
+const { searchId, searchIndex } = require('./middlewares/auxiliares');
 
 const app = express();
 app.use(bodyParser.json());
